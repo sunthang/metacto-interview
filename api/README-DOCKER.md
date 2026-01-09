@@ -6,14 +6,41 @@ Run the backend API in a Docker container with persistent database storage.
 
 - Docker Desktop installed and running
 
-## Build the Docker Image
+## Quick Start with Docker Compose (Recommended)
+
+```bash
+cd api
+
+# Start the API
+docker compose up -d
+
+# With a custom JWT secret
+JWT_SECRET=your-secure-secret docker compose up -d
+
+# View logs
+docker compose logs -f
+
+# Stop
+docker compose down
+```
+
+For production, create a `.env` file:
+
+```bash
+echo "JWT_SECRET=your-secure-secret-here" > .env
+docker compose up -d
+```
+
+## Manual Docker Build & Run
+
+### Build the Docker Image
 
 ```bash
 cd api
 docker build -t feature-voting-api .
 ```
 
-## Run the Container
+### Run the Container
 
 ```bash
 docker run -d \
@@ -35,45 +62,41 @@ docker run -d \
 
 ## Container Management
 
-### View Logs
+### Docker Compose Commands
 
 ```bash
-# Follow logs in real-time
+# View logs
+docker compose logs -f
+
+# Stop containers
+docker compose down
+
+# Restart containers
+docker compose restart
+
+# Rebuild and restart
+docker compose up -d --build
+```
+
+### Manual Docker Commands
+
+```bash
+# View logs
 docker logs -f feature-voting-api
 
-# View last 50 lines
-docker logs --tail 50 feature-voting-api
-```
-
-### Stop Container
-
-```bash
+# Stop container
 docker stop feature-voting-api
-```
 
-### Start Container
-
-```bash
+# Start container
 docker start feature-voting-api
-```
 
-### Remove Container
-
-```bash
+# Remove container
 docker rm feature-voting-api
-```
 
-### Rebuild and Restart
-
-```bash
-# Stop and remove existing container
+# Rebuild and restart
 docker stop feature-voting-api
 docker rm feature-voting-api
-
-# Rebuild image
 docker build -t feature-voting-api .
-
-# Run new container
 docker run -d \
   -p 3000:3000 \
   -v $(pwd)/data:/app/data \

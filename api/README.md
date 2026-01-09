@@ -50,7 +50,15 @@ Optional:
 
 ## Docker
 
-See [README-DOCKER.md](./README-DOCKER.md) for Docker setup instructions.
+The easiest way to run the API is with Docker Compose:
+
+```bash
+docker compose up -d
+```
+
+For production, set `JWT_SECRET` in a `.env` file or via environment variable.
+
+See [README-DOCKER.md](./README-DOCKER.md) for detailed Docker setup instructions.
 
 ## API Endpoints
 
