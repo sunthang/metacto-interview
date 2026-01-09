@@ -32,7 +32,7 @@ A feature-voting application where users can submit feature ideas and upvote exi
 
 #### Backend
 ```bash
-cd feature-voting-api
+cd api
 npm install
 ```
 
