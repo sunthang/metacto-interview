@@ -64,3 +64,71 @@ the package.json does not contain a web script
 (index):1 Refused to execute script from 'http://localhost:8081/index.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled.
 
 @node (219-237)
+
+So now that we have a working base implementation, we have some enhancements to do. Add the following to the plan:
+1: Database schema 
+-Add users (username + password)
+-Track feature ownership (creator shown under feature)
+-Enforce voting rules: one vote per user per feature; no self-upvotes
+
+2: Dockerize backend
+-Backend only
+-SQLite persists via volume
+-No additional infrastructure
+
+3: JWT auth
+-Register/login
+-Protect feature creation and voting
+-Use env-based secret
+
+4: simple log in/ sign up screen
+-Add login + signup screen (input username and password, if exists log in, if not user create)
+-Users can authenticate to access feature creation + voting
+
+Based on the plan markdown, ask clarifying questions if needed, then produce a minimal, ordered task breakdown for the MVP.
+
+Begin with MVP task 1
+
+Proceed with step 2. Let me know when you need me to do something with Docker and I will tell you when I have completed it and then you can proceed.
+
+Docker is working, I have completed the testing.
+
+I don't think the jwt stuff is working. the output from the test script said failure but you said it looked good
+
+Yes please continue to the next step
+
+The app.js file is losing it's appropriate abstraction/ separation of concerns. App.js should only handle main entry point functionality like basic auth, and the CRUD operations should be defined in their component files directly
+
+Ok now we move on to testing the MVP implementation
+
+Run my frontend for ios and ensure no errors
+
+These requirements are met. I have tested the IOS and web versions. Next, add to plan and tasks, please add a logout button in the header. On logout, the user will be kicked back to the log in screen
+
+On IOS, when the user does not exist and they are creating a new user record, an IOS popup appears that says password is incorrect. We need to prevent this. The flow works correctly, but this popup is not accurate
+
+If a user has already voted for this feature, turn the +1 box to a green background with a check icon instead of the +1 text
+
+Docker is running an old version of the code - give me a fresh start with a fresh db
+
+Now I need to clean up files from debugging. Remove console logs and debug logs from non testing files. Update tasks.md with our accurate progress so far.
+
+Update READMEs to reflect our new enhanced MVP. They should explain what the application does, and how to start from scratch beginning with cloning the repo.
+
+Now that we have an MVP with working requirement functionality, I have one further enhancement: Add to the plan
+1: Add MVP realtime sync: when a feature is added or upvoted on any client (iOS/web), other clients update automatically (no manual refresh). Use WebSockets.
+
+Turn the realtime sync item into the smallest task checklist. Ask only necessary questions first. Keep MVP: broadcast "feature created" and "feature upvoted" events and update clients.
+
+No auth is fine since the endpoints themselves are protected
+
+@node (757-792)
+
+The realtime sync is not working. I have an ios version and a web version open. an action in one does not reflect in the other.
+
+Ok everything is working: final clean up time - add to plan and tasks
+1) ensure code is commented
+2) ensure no extra console logs or debug statements or commented out code
+3) ensure READMEs are accurate
+4) Ensure tests are in their own folder
+5) No unused code or props

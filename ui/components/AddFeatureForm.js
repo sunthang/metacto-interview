@@ -1,19 +1,34 @@
+import { useState } from 'react';
 import { StyleSheet, TextInput, Pressable, Text, View, Alert } from 'react-native';
+import { createFeature } from '../services/api';
 
 /**
- * Form component for adding new features
- * @param {string} value - Current input value
- * @param {Function} onChangeText - Callback when input text changes
- * @param {Function} onSubmit - Callback when form is submitted
- * @param {boolean} submitting - Submission loading state
+ * Form component for adding new features - manages its own state and submission
+ * @param {Function} onFeatureCreated - Callback when feature is successfully created
  */
-export default function AddFeatureForm({ value, onChangeText, onSubmit, submitting }) {
-  const handleSubmit = () => {
+export default function AddFeatureForm({ onFeatureCreated }) {
+  const [value, setValue] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async () => {
     if (!value.trim()) {
       Alert.alert('Error', 'Please enter a feature name');
       return;
     }
-    onSubmit();
+
+    try {
+      setSubmitting(true);
+      const newFeature = await createFeature(value.trim());
+      setValue('');
+      // Pass the created feature object to callback
+      if (onFeatureCreated) {
+        onFeatureCreated(newFeature);
+      }
+    } catch (error) {
+      // Error handling is done in the API service
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -21,7 +36,7 @@ export default function AddFeatureForm({ value, onChangeText, onSubmit, submitti
       <TextInput
         style={styles.input}
         value={value}
-        onChangeText={onChangeText}
+        onChangeText={setValue}
         placeholder="add your own feature!"
         placeholderTextColor="#666"
         accessibilityLabel="Feature name input"

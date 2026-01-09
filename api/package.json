@@ -5,12 +5,20 @@
   "scripts": {
     "start": "node server.js",
     "init-db": "node init-db.js",
-    "test-db": "node test-db.js",
-    "test-api": "node test-api.js"
+    "test-db": "node tests/test-db.js",
+    "test-api": "node tests/test-api.js",
+    "test-schema": "node tests/test-schema.js",
+    "test-auth": "node tests/test-auth.js",
+    "test-endpoints": "node tests/test-endpoints.js",
+    "test-e2e": "node tests/test-e2e.js",
+    "test-all": "npm run test-db && npm run test-schema && npm run test-auth && npm run test-endpoints && npm run test-e2e"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
     "express": "^4.18.2",
-    "sqlite3": "^5.1.6",
-    "cors": "^2.8.5"
+    "jsonwebtoken": "^9.0.3",
+    "socket.io": "^4.8.3",
+    "sqlite3": "^5.1.6"
   }
 }

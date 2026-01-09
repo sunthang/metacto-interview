@@ -1,84 +1,104 @@
 import { StatusBar } from 'expo-status-bar';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Header from './components/Header';
 import FeatureList from './components/FeatureList';
 import AddFeatureForm from './components/AddFeatureForm';
-import { fetchFeatures, upvoteFeature, createFeature } from './services/api';
+import LoginScreen from './components/LoginScreen';
+import { getToken, getCurrentUser, logout } from './services/auth';
+import { connectWebSocket, disconnectWebSocket } from './services/websocket';
 
 /**
- * Main app component - orchestrates feature voting functionality
+ * Main app component - handles authentication and entry point only
  */
 export default function App() {
-  const [features, setFeatures] = useState([]);
-  const [newFeature, setNewFeature] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
-  // Load features on mount
+  // Check authentication on mount
   useEffect(() => {
-    loadFeatures();
+    checkAuth();
+  }, []);
+
+  // Connect WebSocket when authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      connectWebSocket();
+    } else {
+      disconnectWebSocket();
+    }
+    
+    // Cleanup: disconnect on unmount
+    return () => {
+      disconnectWebSocket();
+    };
+  }, [isAuthenticated]);
+
+  /**
+   * Checks if user is authenticated
+   */
+  const checkAuth = async () => {
+    try {
+      const token = await getToken();
+      const user = await getCurrentUser();
+      setIsAuthenticated(!!token);
+      setCurrentUser(user);
+    } catch (error) {
+      setIsAuthenticated(false);
+      setCurrentUser(null);
+    } finally {
+      setCheckingAuth(false);
+    }
+  };
+
+  /**
+   * Handles successful login
+   */
+  const handleLogin = async () => {
+    const user = await getCurrentUser();
+    setCurrentUser(user);
+    setIsAuthenticated(true);
+    // Connect WebSocket after login
+    connectWebSocket();
+  };
+
+  /**
+   * Callback to trigger feature list refresh
+   */
+  const handleRefresh = useCallback(() => {
+    setRefreshTrigger(prev => prev + 1);
   }, []);
 
   /**
-   * Loads all features from the API
+   * Handles user logout
    */
-  const loadFeatures = async () => {
-    try {
-      setLoading(true);
-      const data = await fetchFeatures();
-      setFeatures(data);
-    } catch (error) {
-      // Error handling is done in the API service
-    } finally {
-      setLoading(false);
-    }
+  const handleLogout = async () => {
+    disconnectWebSocket();
+    await logout();
+    setIsAuthenticated(false);
+    setCurrentUser(null);
   };
 
-  /**
-   * Handles upvoting a feature
-   * @param {number} id - Feature ID to upvote
-   */
-  const handleUpvote = async (id) => {
-    try {
-      const updated = await upvoteFeature(id);
-      setFeatures(features.map(f => f.id === id ? updated : f));
-    } catch (error) {
-      // Error handling is done in the API service
-    }
-  };
+  // Show login screen if not authenticated
+  if (checkingAuth) {
+    return null;
+  }
 
-  /**
-   * Handles creating a new feature
-   */
-  const handlePost = async () => {
-    try {
-      setSubmitting(true);
-      const feature = await createFeature(newFeature);
-      setFeatures([...features, feature]);
-      setNewFeature('');
-    } catch (error) {
-      // Error handling is done in the API service
-    } finally {
-      setSubmitting(false);
-    }
-  };
+  if (!isAuthenticated) {
+    return <LoginScreen onLogin={handleLogin} />;
+  }
 
   return (
     <View style={styles.container} accessibilityRole="main">
       <StatusBar style="dark" />
-      <Header />
+      <Header onLogout={handleLogout} />
       <FeatureList 
-        features={features} 
-        loading={loading} 
-        onUpvote={handleUpvote} 
+        currentUser={currentUser}
+        onRefresh={refreshTrigger}
       />
-      <AddFeatureForm
-        value={newFeature}
-        onChangeText={setNewFeature}
-        onSubmit={handlePost}
-        submitting={submitting}
-      />
+      <AddFeatureForm onFeatureCreated={handleRefresh} />
     </View>
   );
 }
