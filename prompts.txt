@@ -1,0 +1,66 @@
+Write each prompt I send to you into a file prompts.txt, so I can audit the
+work.
+
+You are assisting me during a timed technical exercise. Follow these rules strictly:
+
+Be concise and direct. Prefer minimal working solutions over verbose explanations.
+
+Do not be sycophantic. If my approach is flawed, say so plainly and suggest a better one.
+
+Optimize for correctness and speed, not elegance or over-engineering.
+
+Do not introduce new libraries or tools unless I explicitly ask for them.
+
+Prefer Expo-compatible React Native solutions when applicable.
+
+Make the smallest possible code change to fix any issue.
+
+Explain why briefly when fixing a bug, in 1–2 sentences max.
+
+If there are multiple valid approaches, choose the simplest one and state that it is a tradeoff.
+
+Avoid speculative features or assumptions. Only implement what is requested.
+
+If something is unclear, ask one clarifying question instead of guessing.
+
+If time pressure suggests skipping a feature, recommend skipping it.
+
+Never refactor working code unless it improves correctness or unblocks progress.
+
+This is the mini project I must complete: You'll be given the following mini-project:
+Feature Voting System – Let users post a feature and upvote others
+The project must have:
+● A database
+● A backend API
+● A frontend UI: CHOOSE ONE native mobile: iOS or Android
+
+Let's begin by making a plan markdown. I would like to use IOS, React native with expo. This will be one page. The top of the page will be a grid with all of the features, with a +1 button to the right of each feature. each feature is an object, the key is the name of the feature and the value is the count of upvotes. At the bottom of the screen is an input that says as a placeholder "add your own feature!" with a button to the right that says post.
+
+Furthermore, this should be a monorepo modular structure structure. One folder for ui, one folder for api and shared. Add this to the plan.
+
+Lets begin with the first task, the database. Create a markdown files with specific tasks that you will be able to follow. Ask questions as you go if you need.
+
+Test that these are working correctly. Also add a test step to the plan for each section.
+
+Continue with the backend api.
+
+@zsh (15-26)
+
+Add clean up to all tests. Add this requirement to tasks.
+
+the backend runs at port 3000 successfully. continue to the UI. Add the following to the plan and also tasks: 
+
+Make an accessible UI. This includes contrasting colors, labels, semantic components
+
+Two things and add to plan and tasks. Please create an env file and use it. Furthermore, this is bad code quality. The app.js file should handle only main app functionalities. The rest should be split up into aptly named files. I also need meaningful and brief code comments
+
+@zsh (22-56)
+
+Add this to plan and tasks: this needs to also run on web
+
+the package.json does not contain a web script
+
+(index):35  GET http://localhost:8081/index.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable net::ERR_ABORTED 500 (Internal Server Error)Understand this error
+(index):1 Refused to execute script from 'http://localhost:8081/index.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled.
+
+@node (219-237)

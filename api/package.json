@@ -1,0 +1,16 @@
+{
+  "name": "feature-voting-api",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "init-db": "node init-db.js",
+    "test-db": "node test-db.js",
+    "test-api": "node test-api.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "sqlite3": "^5.1.6",
+    "cors": "^2.8.5"
+  }
+}
